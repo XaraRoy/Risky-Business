@@ -5,3 +5,7 @@
 *.pkl filter=lfs diff=lfs merge=lfs -text
 *.py filter=lfs diff=lfs merge=lfs -text
 *.MD filter=lfs diff=lfs merge=lfs -text
+*.Rhistory filter=lfs diff=lfs merge=lfs -text
+*.pdf filter=lfs diff=lfs merge=lfs -text
+*.csv filter=lfs diff=lfs merge=lfs -text
+*.dta filter=lfs diff=lfs merge=lfs -text
