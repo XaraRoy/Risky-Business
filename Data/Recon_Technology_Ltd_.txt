@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:687abade85158c94ee30bf00e32771f5f03b0cee1b13647f5922f03fe5d1be9b
-size 158
+[1] "Item 1A.Risk Factors.. The Company is not required to provide the information required by this Item because the Company is a smaller reporting company."

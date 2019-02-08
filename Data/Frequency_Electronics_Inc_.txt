@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e0dca15533e268b5cbf14e7e703a0897d8a08e3e7e2280023f48fea287f99747
-size 110
+[1] "Item 1A. Risk Factors. This item is not required for smaller reporting companies.. 9. Table of Contents"

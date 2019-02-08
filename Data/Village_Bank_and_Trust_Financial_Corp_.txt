@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:7095a8b11c3f969a24ce66a4a49173d6c98a2fe8c4252952aca3e17413e22bd0
-size 44
+[1] "ITEM 1A. RISK FACTORS. Not applicable"

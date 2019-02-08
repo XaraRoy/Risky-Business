@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:22627a1745f14cec516c70799091a6a18f195fb81b5694d9596970c56fac38f8
-size 760
+[1] "Item 1A.  Risk Factors. The information set forth under \"Risk Factors\" which appears on pages 27 through 31 of the Company's 2018 Annual Report to Shareholders is incorporated herein by reference.  The risks described in the section \"Risk Factors\" in the Company's 2018 Annual Report to Shareholders are not the only risks the Company faces.  Additional risks that the Company does not yet know of or that it currently thinks are immaterial may also impair its business operations.  If any of the events or circumstances described in those risks actually occur, the Company's business, financial condition or results of operations could be materially adversely affected.  In such cases, the trading price of the Company's common stock could decline."

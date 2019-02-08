@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e4b7295472c89c7adddd89451dbad8eda680d6b01c27e4a86b30515c1fea69a7
-size 229
+[1] "Item 1A.Risk Factors. The Company is a smaller reporting company by Rule 12b-2 of the Exchange Act and is not required to provide the information required under this item. See also the Forward-Looking Statement on page 20."

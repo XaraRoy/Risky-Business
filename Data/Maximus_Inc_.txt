@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d51a9b8e7b16a86453b00b3c2d98244e637a5a9d6b819a0a8269bd9bc225e4c7
-size 526
+[1] "ITEM 1A.    Risk Factors.. Our operations are subject to many risks that could adversely affect our future financial condition, results of operations and cash flows and, therefore, the market value of our securities. See Exhibit 99.1 of this Annual Report on Form 10-K under the caption \"Special Considerations and Risk Factors\" for information on risks and uncertainties that could affect our future financial condition and performance. The information in Exhibit 99.1 is incorporated by reference into this Item 1A."

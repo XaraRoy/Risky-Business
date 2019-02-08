@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e00d44a621add254658154937113c05b128a2c25306b26c00f38f8eb5c61539c
-size 127
+[1] "Item 1A. RISK FACTORS.. As a smaller reporting company, we are not required to provide disclosure pursuant to this Item."

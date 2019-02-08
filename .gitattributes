@@ -1,11 +1,1 @@
 *.pkl filter=lfs diff=lfs merge=lfs -text
-*.ipynb filter=lfs diff=lfs merge=lfs -text
-*.txt filter=lfs diff=lfs merge=lfs -text
-*.tsv filter=lfs diff=lfs merge=lfs -text
-*.md filter=lfs diff=lfs merge=lfs -text
-*.py filter=lfs diff=lfs merge=lfs -text
-*.MD filter=lfs diff=lfs merge=lfs -text
-*.Rhistory filter=lfs diff=lfs merge=lfs -text
-*.pdf filter=lfs diff=lfs merge=lfs -text
-*.csv filter=lfs diff=lfs merge=lfs -text
-*.dta filter=lfs diff=lfs merge=lfs -text

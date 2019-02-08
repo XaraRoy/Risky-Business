@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:2f3e7ae93a11e224ef347236285da182fe0bfe159c12a595c4a1e138f5050cbf
-size 232
+[1] "Item 1A. Risk Factors. Information in response to this Item 1A can be found in the 2017 Annual Report on pages 146 to 156 under the heading \"Risk Factors.\" That information is incorporated into this report by reference.. 15"
