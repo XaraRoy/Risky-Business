@@ -1,5 +1,19 @@
-from model.py import make_pipeline
+from model import *
+import matplotlib
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+from matplotlib import figure
+import pandas as pd
+from datetime import datetime
+from tqdm import tqdm
+from operator import itemgetter
+import collections
+import seaborn as sns
+from pathlib import Path
+import colorsys
+import colorama
 
+from sklearn.externals import joblib
 
 
 def estimator_load_model(model_time):
@@ -7,10 +21,6 @@ def estimator_load_model(model_time):
     vectorizer = joblib.load(f'../Data/Outputs/vec{model_time}.pkl')
     return model, vectorizer
 
-
-
-model, vectorizer = estimator_load_model('Feb14-0130PM')
-doclist, names = make_pipeline(15, istesting=True)
 
 def estimator_predict_string(string):
     empty_list = []
@@ -25,8 +35,6 @@ def estimator_predict_string(string):
     for ind in order_centroids[predicted[0], :5]:
         print(' %s' % terms[ind])
     return X
-
-
 
 
 def estimator_predict_document(document, name):
@@ -45,20 +53,17 @@ def estimator_predict_document(document, name):
     return(dataframe)
 
 
+def frame_it(doclist, names):
+    frames = []
+    for document, name in zip(doclist, names):
+        frame = estimator_predict_document(document, name)
+        frames.append(frame)
 
-
-frames = []
-for document, name in zip(doclist, names):
-    frame = estimator_predict_document(document, name)
-    frames.append(frame)
-
-muliple_company_frame = pd.concat(frames)
-muliple_company_frame.head()
-
-
-grouped_frame = muliple_company_frame.groupby(
-    ['company', 'label']).agg({'% of total': 'sum'}).reset_index()
-
+    muliple_company_frame = pd.concat(frames)
+    muliple_company_frame.head()
+    grouped_frame = muliple_company_frame.groupby(
+        ['company', 'label']).agg({'% of total': 'sum'}).reset_index()
+    return grouped_frame, muliple_company_frame
 
 
 def prep_for_heatmap(muliple_company_frame):
@@ -67,9 +72,6 @@ def prep_for_heatmap(muliple_company_frame):
 
     company_clusters = company_clusters.reset_index(level=0, drop=True)
     return company_clusters
-
-company_clusters = prep_for_heatmap(muliple_company_frame)
-
 
 
 def plot_heatmap(company_clusters):
@@ -92,13 +94,6 @@ def plot_heatmap(company_clusters):
                 frameon=None, metadata=None)
 
 
-plot_heatmap(company_clusters)
-
-
-
-
-#  https://stackoverflow.com/questions/876853/generating-color-ranges-in-python
-
 
 def get_N_HexCol(N):
     HSV_tuples = [(x * 1.0 / N, 0.5, 0.5) for x in range(N)]
@@ -109,22 +104,33 @@ def get_N_HexCol(N):
     return hex_out
 
 
+
+
+model, vectorizer = estimator_load_model('Feb14-0130PM')
+print("Model LOADED!!")
+doclist, names = make_pipeline(0, istesting=True)
+print("Doclist Generated")
+grouped_frame, muliple_company_frame = frame_it(doclist, names)
+company_clusters = prep_for_heatmap(muliple_company_frame)
+print("Dataframe Generated")
+company_clusters.to_csv(path_or_buf='../Data/Outputs/WHATTONAMETHIS.csv')
+plot_heatmap(company_clusters)
+print("Heatmap Gnerated")
+
+truek = 35
 colormap = get_N_HexCol(truek)
-
-
-# In[106]:
-
 
 for label in range(truek):
     color = colormap[label]
 
+for counter, _ in enumerate(tqdm(doclist)):
+    company = muliple_company_frame['company'].unique()[counter]
+    companyFrame = muliple_company_frame[muliple_company_frame['company'] == company]
+    for text, label in zip(companyFrame['text'], companyFrame['label']):
+        color = colormap[label]
+        display(Markdown(f'<font color="{color}">' +
+                        text + f'  ({label})' + '</font>'))
 
 
-doc_index = 0
-company = muliple_company_frame['company'].unique()[doc_index]
-companyFrame = muliple_company_frame[muliple_company_frame['company'] == company]
-for text, label in zip(companyFrame['text'], companyFrame['label']):
-    color = colormap[label]
-    display(Markdown(f'<font color="{color}">' +
-                     text + f'  ({label})' + '</font>'))
 
+print("Text Ready for Coloring")

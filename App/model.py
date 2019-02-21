@@ -10,13 +10,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 import colorama
 import heapq
 import hdbscan
-import seaborn as sns
 from scipy.sparse import coo_matrix
 from sklearn.metrics import silhouette_samples, silhouette_score
 from pathlib import Path
 import sys
-import collections
-from operator import itemgetter
 import time
 from tqdm import tqdm
 import re
@@ -27,17 +24,13 @@ from nltk import word_tokenize, sent_tokenize
 from nltk.stem import PorterStemmer
 from nltk import pos_tag
 import nltk
-import math
-import matplotlib.cm as cm
-import matplotlib.pyplot as plt
-from matplotlib import figure
+
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.cluster import KMeans
 from sklearn import metrics
 
 import numpy as np
-import pandas as pd
-import matplotlib
+
 
 
 def make_pipeline(NUMBER_OF_DOCS, istesting):
@@ -72,7 +65,7 @@ def make_pipeline(NUMBER_OF_DOCS, istesting):
         print('Test set generated')
         doclist = doclist[NUMBER_OF_DOCS:NUMBER_OF_DOCS * 2]
         names = names[NUMBER_OF_DOCS: NUMBER_OF_DOCS * 2]
-    if len(doclist) > NUMBER_OF_DOCS and NUMBER_OF_DOCS != -1:
+    if len(doclist) > NUMBER_OF_DOCS and NUMBER_OF_DOCS != 0:
         doclist = doclist[:NUMBER_OF_DOCS]
         names = names[:NUMBER_OF_DOCS]
 
@@ -205,6 +198,7 @@ def estimator_cluster(sparseMatrix, vectorizer):
     centroids = model.cluster_centers_
     print("Cluster id labels for inputted data")
     print(labels)
+    
     print("Centroids data")
     print(centroids)
 
@@ -226,8 +220,8 @@ def estimator_cluster(sparseMatrix, vectorizer):
 
 def generate_model():
     num_docs = int(input(
-        "How many docs to process? (-1 for entire folder) : "))
-    if num_docs < 2 and num_docs != -1:
+        "How many docs to process? (0 for entire folder) : "))
+    if num_docs < 2 and num_docs != 0:
         print('More documents please!')
         generate_model()
     doclist, names = make_pipeline(num_docs, istesting=False)
