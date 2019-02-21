@@ -17,26 +17,31 @@ structure
     ├── data                    
     │   ├── inputs          # Risk Documents to be processesed
     │   └── outputs         # Model, Vectorizer, CSV Files
+    │        ├── colortexts   #HTML color coded docs 
+    │        └── summaryCsv  # Makup of each doc, by clustter       
     ├── app                       
-    │   ├── model_generator.py           
-    │   ├── string_predict.py        
-    │   └── folder_predict.py             
-                   
+    │   ├── model.py          
+    │   └── predict.py             
+    ├── notebooks                
     │   ├── Glove.ipynb          
-    │   └── kmeans_pipeline.ipynb         
-    │    folder_predict.py        
+    │   └── kmeans_pipeline.ipynb               
     ├── LICENSE      
     └── README.md
 
 
 Libraries Used
 collections
+colorama
+colorsys
 datetime
 future
 gensim
 heapq
+jinja2
 math
 matplotlib
+markdown
+markdown2
 nltk
 numpy
 operator
