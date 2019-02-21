@@ -7,7 +7,7 @@ from sklearn.externals import joblib
 from sklearn.metrics import euclidean_distances
 from sklearn.metrics.pairwise import cosine_similarity
 
-
+import colorama
 import heapq
 import hdbscan
 import seaborn as sns
@@ -18,7 +18,7 @@ import sys
 import collections
 from operator import itemgetter
 import time
-from tqdm.auto import tqdm
+from tqdm import tqdm
 import re
 
 from datetime import datetime
@@ -44,22 +44,21 @@ import matplotlib
 def make_pipeline(NUMBER_OF_DOCS, istesting):
     doclist = []
     names = []
-    pathlist = input("Enter a relative path, or hit enter for '../Data/Inputs'")
-    if pathlist == "":
+    pathlist = input("Enter a relative path, or -1 for '../Data/Inputs'")
+    if pathlist == -1:
         pathlist = Path("../Data/Inputs").glob('**/*.txt')
-    for path in tqdm(pathlist):
         # because path is object not string
-        path_in_str = str(path)
-        name = path_in_str.split("\\")[3].split(".")[0]
-        names.append(name.replace("_", " "))
-        file = open(path, "r")
-        text = file.readlines()
-        doclist.append(text[0])
+    path_in_str = str(path)
+    name = path_in_str.split("\\")[3].split(".")[0]
+    names.append(name.replace("_", " "))
+    file = open(path, "r")
+    text = file.readlines()
+    doclist.append(text[0])
     if istesting == True:
         print('Test set generated')
         doclist = doclist[NUMBER_OF_DOCS:NUMBER_OF_DOCS * 2]
         names = names[NUMBER_OF_DOCS: NUMBER_OF_DOCS * 2]
-    if len(doclist) > NUMBER_OF_DOCS:
+    if len(doclist) > NUMBER_OF_DOCS and NUMBER_OF_DOCS != -1:
         doclist = doclist[:NUMBER_OF_DOCS]
         names = names[:NUMBER_OF_DOCS]
 
@@ -191,18 +190,10 @@ def estimator_cluster(sparseMatrix, vectorizer):
     order_centroids = model.cluster_centers_.argsort()[:, ::-1]
     terms = vectorizer.get_feature_names()
 
-    return terms, order_centroids, model, truek, model_time
-
-
-
-
-
-def estimator_ppscore(model):
-    labels = model.labels_
-    centroids = model.cluster_centers_
-
     print(f"Model Generated at {model_time}")
 
+    labels = model.labels_
+    centroids = model.cluster_centers_
     print("Cluster id labels for inputted data")
     print(labels)
     print("Centroids data")
@@ -218,7 +209,9 @@ def estimator_ppscore(model):
 
     print("Silhouette_score: ")
     print(silhouette_score)
-    return kmeans_score, silhouette_score
+
+    return terms, order_centroids, model, truek, model_time, kmeans_score, silhouette_score
+
 
 
 
@@ -306,19 +299,24 @@ def estimator_ppscore(model):
 
 
 
-num_docs = input("How many docs to process? : ")
+def generate_model():
 
-doclist, names = make_pipeline(num_docs, istesting=False)
-tokens = transform_tokens(doclist)
-filtered_tokens, names_list = transform_filtered(tokens, doclist, names)
-stemmed = transform_stemming(filtered_tokens)
-
-
-largest_ngram = 15
-smallest_ngram = 1
-largest_ngram = len(max(tokens, key=len))
-sparseMatrix, vectorizer = transform_vectorize(stemmed, smallest_ngram, largest_ngram)
+    num_docs = int(input("How many docs to process? (-1 for entire folder) : "))
+    if num_docs == 1:
+        print('More documents please!')
+        generate_model()
+    doclist, names = make_pipeline(num_docs, istesting=False)
+    tokens = transform_tokens(doclist)
+    filtered_tokens, names_list = transform_filtered(tokens, doclist, names)
+    stemmed = transform_stemming(filtered_tokens)
 
 
-terms, order_centroids, model, truek, model_time = estimator_cluster(sparseMatrix, vectorizer)
-estimator_ppscore(model)
+    largest_ngram = 15
+    smallest_ngram = 1
+    largest_ngram = len(max(tokens, key=len))
+    sparseMatrix, vectorizer = transform_vectorize(stemmed, smallest_ngram, largest_ngram)
+
+
+    terms, order_centroids, model, truek, model_time, kmeans_score, silhouette_score = estimator_cluster(sparseMatrix, vectorizer)
+
+generate_model()
