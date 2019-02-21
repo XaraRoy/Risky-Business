@@ -62,7 +62,7 @@ def estimator_predict_document(document, name):
 
 def frame_it(doclist, names):
     frames = []
-    for document, name in zip(doclist, names):
+    for document, name in tqdm(zip(doclist, names), desc="Predicting Documents"):
         frame = estimator_predict_document(document, name)
         frames.append(frame)
 
@@ -115,7 +115,7 @@ def get_N_HexCol(N):
 
 model, vectorizer = estimator_load_model('Feb14-0130PM')
 print("Model LOADED!!")
-doclist, names = make_pipeline(15, istesting=True)
+doclist, names = make_pipeline(1000, istesting=True)
 print("Doclist Generated")
 grouped_frame, muliple_company_frame = frame_it(doclist, names)
 company_clusters = prep_for_heatmap(muliple_company_frame)
@@ -130,8 +130,8 @@ colormap = get_N_HexCol(truek)
 for label in range(truek):
     color = colormap[label]
 
-
-
+# Reference
+# https://gist.github.com/jiffyclub/5015986
 
 
 TEMPLATE = """<!DOCTYPE html>
@@ -165,7 +165,7 @@ TEMPLATE = """<!DOCTYPE html>
 
 markdowns = []
 
-for counter, _ in enumerate(tqdm(doclist)):
+for counter, _ in enumerate(tqdm(doclist, desc="Generating Color Text HTML")):
     company = muliple_company_frame['company'].unique()[counter]
     companyFrame = muliple_company_frame[muliple_company_frame['company'] == company]
     name = names[counter].replace(" ", "_")
@@ -173,6 +173,8 @@ for counter, _ in enumerate(tqdm(doclist)):
     extensions = ['extra', 'smarty']
 
     with open(md_file, 'w') as f:
+        f.write(marked(f'<h1>{name.replace("_"," ")}</h1>'))
+        f.write(marked('<h3>Year</h3>'))
         for text, label in zip(companyFrame['text'], companyFrame['label']):
             color = colormap[label]
             f.write(marked(f'<font color="{color}">' +  text + f'  ({label})' + '</font>'))
