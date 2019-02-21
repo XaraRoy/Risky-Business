@@ -14,7 +14,14 @@ import colorsys
 import colorama
 
 from sklearn.externals import joblib
-
+from markdown2 import markdown as marked
+import argparse
+import sys
+from pathlib import Path
+from tqdm import tqdm
+import jinja2
+import markdown
+import os
 
 def estimator_load_model(model_time):
     model = joblib.load(f'../Data/Outputs/s2s{model_time}.pkl')
@@ -108,7 +115,7 @@ def get_N_HexCol(N):
 
 model, vectorizer = estimator_load_model('Feb14-0130PM')
 print("Model LOADED!!")
-doclist, names = make_pipeline(0, istesting=True)
+doclist, names = make_pipeline(15, istesting=True)
 print("Doclist Generated")
 grouped_frame, muliple_company_frame = frame_it(doclist, names)
 company_clusters = prep_for_heatmap(muliple_company_frame)
@@ -123,14 +130,56 @@ colormap = get_N_HexCol(truek)
 for label in range(truek):
     color = colormap[label]
 
+
+
+
+
+TEMPLATE = """<!DOCTYPE html>
+<html>
+<head>
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        code, pre {
+            font-family: monospace;
+        }
+        h1 code,
+        h2 code,
+        h3 code,
+        h4 code,
+        h5 code,
+        h6 code {
+            font-size: inherit;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+{{content}}
+</div>
+</body>
+</html>
+"""
+
+markdowns = []
+
 for counter, _ in enumerate(tqdm(doclist)):
     company = muliple_company_frame['company'].unique()[counter]
     companyFrame = muliple_company_frame[muliple_company_frame['company'] == company]
-    for text, label in zip(companyFrame['text'], companyFrame['label']):
-        color = colormap[label]
-        display(Markdown(f'<font color="{color}">' +
-                        text + f'  ({label})' + '</font>'))
+    name = names[counter].replace(" ", "_")
+    md_file = f"../Data/{name}.md"
+    extensions = ['extra', 'smarty']
 
+    with open(md_file, 'w') as f:
+        for text, label in zip(companyFrame['text'], companyFrame['label']):
+            color = colormap[label]
+            f.write(marked(f'<font color="{color}">' +  text + f'  ({label})' + '</font>'))
+    with open(md_file, 'r') as f:
+        html = markdown.markdown(f.read(), extensions=extensions, output_format='html5')
+        doc = jinja2.Template(TEMPLATE).render(content=html) 
+    with open(f'../Data/Outputs/ColorTexts/{name}.html', 'w') as k:
+        k.write(doc)
 
-
-print("Text Ready for Coloring")
+    os.remove(md_file)
