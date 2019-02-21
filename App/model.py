@@ -44,16 +44,33 @@ import matplotlib
 def make_pipeline(NUMBER_OF_DOCS, istesting):
     doclist = []
     names = []
-    pathlist = input("Enter a relative path, or -1 for '../Data/Inputs'")
-    if pathlist == -1:
+    Path_Input = input("Enter a relative path, or hit enter for ../Data/Inputs:   ")
+    if Path_Input == "":
         pathlist = Path("../Data/Inputs").glob('**/*.txt')
+    else: 
+        pathlist = Path(Path_Input).glob('**/*.txt')
+
+    try:
+        for path in tqdm(pathlist):
         # because path is object not string
-    path_in_str = str(path)
-    name = path_in_str.split("\\")[3].split(".")[0]
-    names.append(name.replace("_", " "))
-    file = open(path, "r")
-    text = file.readlines()
-    doclist.append(text[0])
+            path_in_str = str(path)
+            name = path_in_str.split("\\")[3].split(".")[0]
+            names.append(name.replace("_", " "))
+            # TODO SPLIT PATH TO COMPANY NAME, make Index
+            file = open(path, "r")
+            # print "Output of Readlines after appending"
+            text = file.readlines()
+        #     print(text[:10])
+            doclist.append(text[0])
+
+    except IndexError as I:
+        print(I, "Did you enter a correct path?")
+        sys.exit()
+    except ValueError as I:
+        print(I, "Did you enter a correct path?")
+        sys.exit()
+
+
     if istesting == True:
         print('Test set generated')
         doclist = doclist[NUMBER_OF_DOCS:NUMBER_OF_DOCS * 2]
@@ -64,7 +81,10 @@ def make_pipeline(NUMBER_OF_DOCS, istesting):
 
     print('%s docs loaded' % len(names))
     print()
-    print(names[:5], '......',  names[-5:])
+    if len(names) > 5:
+        print(names[:5])
+    if len(names) > 10:
+        print('......', names[-5:])
 
     
     return doclist, names
@@ -73,7 +93,7 @@ def make_pipeline(NUMBER_OF_DOCS, istesting):
 
 def transform_tokens(doclist):
     token_list = []
-    for doc in tqdm(doclist, desc="Tokenizing", leave=True):
+    for doc in tqdm(doclist, desc="Tokenizing", leave=False):
         dirty_tokens = nltk.sent_tokenize(doc)
         token_list += [dirty_tokens]
     return token_list
@@ -99,7 +119,7 @@ def transform_filtered(token_list, doclist, names):
             token_list = [token_list]
         index = 0
 
-        for tokens in tqdm(token_list, desc="Filtering Documents"):
+        for tokens in tqdm(token_list, desc="Filtering Documents", leave=True):
             filtered_docs = []
             name = names[index]
             for token in tqdm(tokens, desc="Filtering Words", leave=False):
@@ -302,10 +322,12 @@ def estimator_cluster(sparseMatrix, vectorizer):
 def generate_model():
 
     num_docs = int(input("How many docs to process? (-1 for entire folder) : "))
-    if num_docs == 1:
+    if num_docs < 2 and num_docs != -1:
         print('More documents please!')
         generate_model()
     doclist, names = make_pipeline(num_docs, istesting=False)
+
+
     tokens = transform_tokens(doclist)
     filtered_tokens, names_list = transform_filtered(tokens, doclist, names)
     stemmed = transform_stemming(filtered_tokens)
