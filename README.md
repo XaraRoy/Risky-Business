@@ -20,7 +20,7 @@ structure
     │        ├── colortexts   #HTML color coded docs 
     │        └── summaryCsv  # Makup of each doc, by clustter       
     ├── app                       
-    │   ├── predict.py          
+    │   ├── model.py          
     │   └── predict.py             
     ├── notebooks                
     │   ├── Glove.ipynb          
