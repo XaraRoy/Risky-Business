@@ -1,4 +1,4 @@
-from model import *
+# from model import make_pipeline
 import matplotlib
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
@@ -15,7 +15,6 @@ import colorama
 
 from sklearn.externals import joblib
 from markdown2 import markdown as marked
-import argparse
 import sys
 from pathlib import Path
 from tqdm import tqdm
@@ -23,7 +22,54 @@ import jinja2
 import markdown
 import os
 
+
+def make_pipeline(NUMBER_OF_DOCS, istesting):
+    doclist = []
+    names = []
+    Path_Input = input(
+        "Enter a relative path, or hit enter for ../Data/Inputs:   ")
+    if Path_Input == "":
+        pathlist = Path("../Data/Inputs").glob('**/*.txt')
+    else:
+        pathlist = Path(Path_Input).glob('**/*.txt')
+
+    try:
+        for path in tqdm(pathlist):
+            path_in_str = str(path)
+            name = path_in_str.split("\\")[3].split(".")[0]
+            names.append(name.replace("_", " "))
+            # TODO SPLIT PATH TO COMPANY NAME, make Index
+            file = open(path, "r")
+            # print "Output of Readlines after appending"
+            text = file.readlines()
+        #     print(text[:10])
+            doclist.append(text[0])
+
+    except IndexError as I:
+        print(I, "Did you enter a correct path?")
+        sys.exit()
+    except ValueError as I:
+        print(I, "Did you enter a correct path?")
+        sys.exit()
+    # if istesting is True:
+    #     print('Test set generated')
+    #     doclist = doclist[NUMBER_OF_DOCS:NUMBER_OF_DOCS * 2]
+    #     names = names[NUMBER_OF_DOCS: NUMBER_OF_DOCS * 2]
+    # if len(doclist) > NUMBER_OF_DOCS and NUMBER_OF_DOCS != 0:
+    #     doclist = doclist[:NUMBER_OF_DOCS]
+    #     names = names[:NUMBER_OF_DOCS]
+
+    print('%s docs loaded' % len(names))
+    print()
+    if len(names) > 5:
+        print(names[:5])
+    if len(names) > 10:
+        print('......', names[-5:])
+    return doclist, names
+
+
 def estimator_load_model(model_time):
+    print("Loading Model")
     model = joblib.load(f'../Data/Outputs/s2s{model_time}.pkl')
     vectorizer = joblib.load(f'../Data/Outputs/vec{model_time}.pkl')
     return model, vectorizer
@@ -112,10 +158,10 @@ def get_N_HexCol(N):
 
 
 
-
+print("Loading model...")
 model, vectorizer = estimator_load_model('Feb14-0130PM')
 print("Model LOADED!!")
-doclist, names = make_pipeline(1000, istesting=True)
+doclist, names = make_pipeline(3106, istesting=True)
 print("Doclist Generated")
 grouped_frame, muliple_company_frame = frame_it(doclist, names)
 company_clusters = prep_for_heatmap(muliple_company_frame)
